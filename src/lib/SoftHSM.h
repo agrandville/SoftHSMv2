@@ -34,7 +34,10 @@
 
 #include "config.h"
 #include "log.h"
+
+#define CRYPTOKI_EXPORTS
 #include "cryptoki.h"
+
 #include "SessionObjectStore.h"
 #include "ObjectStore.h"
 #include "SessionManager.h"
@@ -50,8 +53,10 @@
 #include "DHPrivateKey.h"
 #include "GOSTPublicKey.h"
 #include "GOSTPrivateKey.h"
-
 #include <memory>
+
+
+
 
 class SoftHSM
 {
@@ -363,6 +368,18 @@ private:
 		CK_BBOOL isOnToken,
 		CK_BBOOL isPrivate
 	);
+	CK_RV deriveKey
+		(
+		CK_SESSION_HANDLE hSession,
+		CK_MECHANISM_PTR pMechanism,
+		CK_OBJECT_HANDLE hBaseKey,
+		CK_ATTRIBUTE_PTR pTemplate,
+		CK_ULONG ulCount,
+		CK_OBJECT_HANDLE_PTR phKey,
+		CK_KEY_TYPE keyType,
+		CK_BBOOL isOnToken,
+		CK_BBOOL isPrivate
+		);
 	CK_RV CreateObject
 	(
 		CK_SESSION_HANDLE hSession,

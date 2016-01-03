@@ -41,7 +41,10 @@ syslog(int priority, const char *message, ...) {
 	va_start(ap, message);
 	vsprintf(buf, message, ap);
 	va_end(ap);
-
+#ifdef _DEBUG
+	OutputDebugStringA(buf);
+	OutputDebugStringA("\n");
+#else
 	/* Make sure that the channel is open to write the event */
 	if (hEventLog == NULL) {
 		openlog("SoftHSM", 0, 0);
@@ -64,6 +67,7 @@ syslog(int priority, const char *message, ...) {
 			break;
 		}
 	}
+#endif
 }
 
 #endif

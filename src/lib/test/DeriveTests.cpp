@@ -200,12 +200,13 @@ CK_RV DeriveTests::generateDes2Key(CK_SESSION_HANDLE hSession, CK_BBOOL bToken, 
 CK_RV DeriveTests::generateDes3Key(CK_SESSION_HANDLE hSession, CK_BBOOL bToken, CK_BBOOL bPrivate, CK_OBJECT_HANDLE &hKey)
 {
 	CK_MECHANISM mechanism = { CKM_DES3_KEY_GEN, NULL_PTR, 0 };
-	// CK_BBOOL bFalse = CK_FALSE;
+	CK_BBOOL bFalse = CK_FALSE;
 	CK_BBOOL bTrue = CK_TRUE;
 	CK_ATTRIBUTE keyAttribs[] = {
 		{ CKA_TOKEN, &bToken, sizeof(bToken) },
 		{ CKA_PRIVATE, &bPrivate, sizeof(bPrivate) },
-		{ CKA_SENSITIVE, &bTrue, sizeof(bTrue) },
+		{ CKA_SENSITIVE, &bFalse, sizeof(bFalse) },
+		{ CKA_EXTRACTABLE, &bTrue, sizeof(bTrue) },
 		{ CKA_DERIVE, &bTrue, sizeof(bTrue) }
 	};
 
@@ -389,22 +390,22 @@ void DeriveTests::symDerive(CK_SESSION_HANDLE hSession, CK_OBJECT_HANDLE hKey, C
 
 	switch (keyType)
 	{
-		case CKK_GENERIC_SECRET:
-			secLen = 32;
-			break;
-		case CKK_DES:
-			mechEncrypt.mechanism = CKM_DES_ECB;
-			break;
-		case CKK_DES2:
-		case CKK_DES3:
-			mechEncrypt.mechanism = CKM_DES3_ECB;
-			break;
-		case CKK_AES:
-			mechEncrypt.mechanism = CKM_AES_ECB;
-			secLen = 32;
-			break;
-		default:
-			CPPUNIT_FAIL("Invalid key type");
+	case CKK_GENERIC_SECRET:
+		secLen = 32;
+		break;
+	case CKK_DES:
+		mechEncrypt.mechanism = CKM_DES_ECB;
+		break;
+	case CKK_DES2:
+	case CKK_DES3:
+		mechEncrypt.mechanism = CKM_DES3_ECB;
+		break;
+	case CKK_AES:
+		mechEncrypt.mechanism = CKM_AES_ECB;
+		secLen = 32;
+		break;
+	default:
+		CPPUNIT_FAIL("Invalid key type");
 	}
 
 	CK_OBJECT_CLASS keyClass = CKO_SECRET_KEY;
@@ -461,6 +462,34 @@ void DeriveTests::symDerive(CK_SESSION_HANDLE hSession, CK_OBJECT_HANDLE hKey, C
 	CPPUNIT_ASSERT(memcmp(data, recoveredText, sizeof(data)) == 0);
 }
 
+CK_RV DeriveTests::keyDerive(CK_SESSION_HANDLE hSession, CK_OBJECT_HANDLE hKey, CK_OBJECT_HANDLE &hDerive, CK_MECHANISM_TYPE mechType, CK_KEY_TYPE keyType, CK_ULONG keyLength/*=0*/)
+{
+	CK_MECHANISM mechanism = { mechType, NULL_PTR, 0 };
+	CK_OBJECT_CLASS keyClass = CKO_SECRET_KEY;
+	CK_BBOOL bFalse = CK_FALSE;
+	CK_BBOOL bTrue = CK_TRUE;
+	CK_ATTRIBUTE keyAttribs[8] = {
+		{ CKA_CLASS, &keyClass, sizeof(keyClass) },
+		{ CKA_PRIVATE, &bFalse, sizeof(bFalse) },
+		{ CKA_ENCRYPT, &bTrue, sizeof(bTrue) },
+		{ CKA_DECRYPT, &bTrue, sizeof(bTrue) },
+		{ CKA_SENSITIVE, &bFalse, sizeof(bFalse) },
+		{ CKA_EXTRACTABLE, &bTrue, sizeof(bTrue) }
+	};
+	CK_ULONG ulAttributeCount = 6;
+	
+	if (keyType != (CK_ULONG)(-1))
+		keyAttribs[ulAttributeCount++] = { CKA_KEY_TYPE, &keyType, sizeof(keyType) };
+	if (keyLength != (CK_ULONG)(-1))
+		keyAttribs[ulAttributeCount++] = { CKA_VALUE_LEN, &keyLength, sizeof(keyLength) };
+
+
+	return C_DeriveKey(hSession, &mechanism, hKey,
+		keyAttribs, ulAttributeCount,
+		&hDerive);
+
+}
+
 void DeriveTests::testSymDerive()
 {
 	CK_RV rv;
@@ -512,6 +541,7 @@ void DeriveTests::testSymDerive()
 
 	// Derive keys
 	CK_OBJECT_HANDLE hDerive = CK_INVALID_HANDLE;
+
 #ifndef WITH_FIPS
 	symDerive(hSessionRW,hKeyDes,hDerive,CKM_DES_ECB_ENCRYPT_DATA,CKK_GENERIC_SECRET);
 	symDerive(hSessionRW,hKeyDes,hDerive,CKM_DES_ECB_ENCRYPT_DATA,CKK_DES);
@@ -569,4 +599,95 @@ void DeriveTests::testSymDerive()
 	symDerive(hSessionRW,hKeyAes,hDerive,CKM_AES_CBC_ENCRYPT_DATA,CKK_DES3);
 	symDerive(hSessionRW,hKeyAes,hDerive,CKM_AES_CBC_ENCRYPT_DATA,CKK_AES);
 }
+
+void DeriveTests::testkeyDerive()
+{
+	CK_RV rv;
+	CK_UTF8CHAR pin[] = SLOT_0_USER1_PIN;
+	CK_ULONG pinLength = sizeof(pin) - 1;
+	CK_SESSION_HANDLE hSessionRO;
+	CK_SESSION_HANDLE hSessionRW;
+
+	// Just make sure that we finalize any previous tests
+	C_Finalize(NULL_PTR);
+
+	// Open read-only session on when the token is not initialized should fail
+	rv = C_OpenSession(SLOT_INIT_TOKEN, CKF_SERIAL_SESSION, NULL_PTR, NULL_PTR, &hSessionRO);
+	CPPUNIT_ASSERT(rv == CKR_CRYPTOKI_NOT_INITIALIZED);
+
+	// Initialize the library and start the test.
+	rv = C_Initialize(NULL_PTR);
+	CPPUNIT_ASSERT(rv == CKR_OK);
+
+	// Open read-only session
+	rv = C_OpenSession(SLOT_INIT_TOKEN, CKF_SERIAL_SESSION, NULL_PTR, NULL_PTR, &hSessionRO);
+	CPPUNIT_ASSERT(rv == CKR_OK);
+
+	// Open read-write session
+	rv = C_OpenSession(SLOT_INIT_TOKEN, CKF_SERIAL_SESSION | CKF_RW_SESSION, NULL_PTR, NULL_PTR, &hSessionRW);
+	CPPUNIT_ASSERT(rv == CKR_OK);
+
+	// Login USER into the sessions so we can create private objects
+	rv = C_Login(hSessionRO, CKU_USER, pin, pinLength);
+	CPPUNIT_ASSERT(rv == CKR_OK);
+
+	// Generate base key
+	CK_OBJECT_HANDLE hKeyDes3 = CK_INVALID_HANDLE;
+	CK_OBJECT_HANDLE hKeyAes = CK_INVALID_HANDLE;
+	rv = generateDes3Key(hSessionRW, IN_SESSION, IS_PRIVATE, hKeyDes3);
+	CPPUNIT_ASSERT(rv == CKR_OK);
+	rv = generateAesKey(hSessionRW, IN_SESSION, IS_PUBLIC, hKeyAes);
+	CPPUNIT_ASSERT(rv == CKR_OK);
+
+	// Derive keys
+	CK_OBJECT_HANDLE hDerive = CK_INVALID_HANDLE;
+	
+	// derived secret is too short (MD5=16 and DES3=20)
+	rv = keyDerive(hSessionRW, hKeyDes3, hDerive, CKM_MD5_KEY_DERIVATION, CKK_DES3);
+	CPPUNIT_ASSERT(rv == CKR_FUNCTION_FAILED);
+
+	// no AES key size 
+	rv = keyDerive(hSessionRW, hKeyDes3, hDerive, CKM_MD5_KEY_DERIVATION, CKK_AES);
+	CPPUNIT_ASSERT(rv == CKR_ATTRIBUTE_VALUE_INVALID);
+	
+	// no key type and no length is provided
+	rv = keyDerive(hSessionRW, hKeyDes3, hDerive, CKM_MD5_KEY_DERIVATION);
+	CPPUNIT_ASSERT(rv == CKR_OK);
+
+	CK_ULONG	valueLength;
+	CK_BYTE		value[64];
+	CK_KEY_TYPE keyType;
+	CK_BBOOL	ckSensitive,
+				ckPrivate,
+				ckExtractable;
+	CK_ATTRIBUTE valAttrib[6];
+
+	valAttrib[0] = { CKA_VALUE, &value, sizeof(value) };
+	valAttrib[1] = { CKA_KEY_TYPE, &keyType, sizeof(keyType) };
+	valAttrib[2] = { CKA_VALUE_LEN, &valueLength, sizeof(valueLength) };
+	valAttrib[3] = { CKA_SENSITIVE, &ckSensitive, sizeof(ckSensitive) };
+	valAttrib[4] = { CKA_PRIVATE, &ckPrivate, sizeof(ckPrivate) };
+	valAttrib[5] = { CKA_EXTRACTABLE, &ckExtractable, sizeof(ckExtractable) };
+	rv = C_GetAttributeValue(hSessionRW, hDerive, valAttrib, sizeof(valAttrib) / sizeof(CK_ATTRIBUTE));
+	CPPUNIT_ASSERT(rv == CKR_OK);
+	CPPUNIT_ASSERT(*((CK_KEY_TYPE*)(valAttrib[1].pValue)) == CKK_GENERIC_SECRET);
+	CPPUNIT_ASSERT(*((CK_ULONG*)(valAttrib[2].pValue)) == 16);
+
+
+  	rv = keyDerive(hSessionRW, hKeyDes3, hDerive, CKM_SHA1_KEY_DERIVATION, CKK_GENERIC_SECRET, 20);
+	CPPUNIT_ASSERT(rv == CKR_OK);
+	rv = keyDerive(hSessionRW, hKeyDes3, hDerive, CKM_SHA256_KEY_DERIVATION, CKK_GENERIC_SECRET, 20);
+	CPPUNIT_ASSERT(rv == CKR_OK);
+	rv = keyDerive(hSessionRW, hKeyAes, hDerive, CKM_SHA384_KEY_DERIVATION, CKK_GENERIC_SECRET, 20);
+	CPPUNIT_ASSERT(rv == CKR_OK);
+	rv = keyDerive(hSessionRW, hKeyAes, hDerive, CKM_SHA512_KEY_DERIVATION);
+	valAttrib[0] = { CKA_VALUE,		&value,				sizeof(value) };
+	valAttrib[2] = { CKA_VALUE_LEN, &valueLength,		sizeof(valueLength) };
+	rv = C_GetAttributeValue(hSessionRW, hDerive, valAttrib, sizeof(valAttrib) / sizeof(CK_ATTRIBUTE));
+	CPPUNIT_ASSERT(*((CK_KEY_TYPE*)(valAttrib[1].pValue)) == CKK_GENERIC_SECRET);
+	CPPUNIT_ASSERT(*((CK_ULONG*)(valAttrib[2].pValue)) == 64);
+
+}
+
+
 

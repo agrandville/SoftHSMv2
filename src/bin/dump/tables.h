@@ -452,7 +452,6 @@ void fill_CKM_table(std::map<unsigned long, std::string> &t)
 	t[CKM_AES_CFB8] = "CKM_AES_CFB8";
 	t[CKM_AES_CFB128] = "CKM_AES_CFB128";
 	t[CKM_RSA_PKCS_TPM_1_1] = "CKM_RSA_PKCS_TPM_1_1";
-	t[CKM_RSA_PKCS_OAEPTPM_1_1] = "CKM_RSA_PKCS_OAEPTPM_1_1";
 }
 
 void fill_CKO_table(std::map<unsigned long, std::string> &t)

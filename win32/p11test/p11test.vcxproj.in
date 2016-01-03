@@ -100,7 +100,7 @@ copy ..\..\src\lib\test\tokens\dummy.in "$(TargetDir)\tokens\dummy"
   <ItemGroup>
     <ClInclude Include="..\..\src\lib\access.h" />
     <ClInclude Include="..\..\src\lib\common\osmutex.h" />
-    <ClInclude Include="..\..\src\lib\cryptoki.h" />
+    <ClInclude Include="..\..\src\lib\cryptoki_compat\cryptoki.h" />
     <ClInclude Include="..\..\src\lib\cryptoki_compat\pkcs11.h" />
     <ClInclude Include="..\..\src\lib\P11Attributes.h" />
     <ClInclude Include="..\..\src\lib\P11Objects.h" />

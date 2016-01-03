@@ -35,8 +35,8 @@
 #include "config.h"
 #include "log.h"
 #include "fatal.h"
-#include "cryptoki.h"
 #include "SoftHSM.h"
+#include "cryptoki.h"
 
 // PKCS #11 function list
 //
@@ -117,6 +117,7 @@ static CK_FUNCTION_LIST functionList =
 	C_CancelFunction,
 	C_WaitForSlotEvent
 };
+
 
 // PKCS #11 initialisation function
 CK_RV C_Initialize(CK_VOID_PTR pInitArgs)

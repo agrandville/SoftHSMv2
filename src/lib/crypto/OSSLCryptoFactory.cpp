@@ -309,27 +309,26 @@ HashAlgorithm* OSSLCryptoFactory::getHashAlgorithm(HashAlgo::Type algorithm)
 {
 	switch (algorithm)
 	{
-		case HashAlgo::MD5:
-			return new OSSLMD5();
-		case HashAlgo::SHA1:
-			return new OSSLSHA1();
-		case HashAlgo::SHA224:
-			return new OSSLSHA224();
-		case HashAlgo::SHA256:
-			return new OSSLSHA256();
-		case HashAlgo::SHA384:
-			return new OSSLSHA384();
-		case HashAlgo::SHA512:
-			return new OSSLSHA512();
+	case HashAlgo::MD5:
+		return new OSSLMD5();
+	case HashAlgo::SHA1:
+		return new OSSLSHA1();
+	case HashAlgo::SHA224:
+		return new OSSLSHA224();
+	case HashAlgo::SHA256:
+		return new OSSLSHA256();
+	case HashAlgo::SHA384:
+		return new OSSLSHA384();
+	case HashAlgo::SHA512:
+		return new OSSLSHA512();
 #ifdef WITH_GOST
-		case HashAlgo::GOST:
-			return new OSSLGOSTR3411();
+	case HashAlgo::GOST:
+		return new OSSLGOSTR3411();
 #endif
-		default:
-			// No algorithm implementation is available
-			ERROR_MSG("Unknown algorithm '%i'", algorithm);
-
-			return NULL;
+	default:
+		// No algorithm implementation is available
+		ERROR_MSG("Unknown algorithm '%i'", algorithm);
+		return NULL;
 	}
 
 	// No algorithm implementation is available

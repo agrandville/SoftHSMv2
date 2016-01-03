@@ -79,7 +79,7 @@
     <ClInclude Include="..\..\src\lib\access.h">
       <Filter>Lib Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\lib\cryptoki.h">
+    <ClInclude Include="..\..\src\lib\cryptoki_compat\cryptoki.h">
       <Filter>Lib Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\lib\cryptoki_compat\pkcs11.h">

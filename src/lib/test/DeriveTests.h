@@ -41,11 +41,14 @@ class DeriveTests : public CppUnit::TestFixture
 	CPPUNIT_TEST_SUITE(DeriveTests);
 	CPPUNIT_TEST(testDhDerive);
 	CPPUNIT_TEST(testSymDerive);
+	CPPUNIT_TEST(testkeyDerive);
 	CPPUNIT_TEST_SUITE_END();
 
 public:
 	void testDhDerive();
 	void testSymDerive();
+	void testkeyDerive();
+
 
 	void setUp();
 	void tearDown();
@@ -61,6 +64,8 @@ protected:
 	void dhDerive(CK_SESSION_HANDLE hSession, CK_OBJECT_HANDLE hPublicKey, CK_OBJECT_HANDLE hPrivateKey, CK_OBJECT_HANDLE &hKey);
 	bool compareSecret(CK_SESSION_HANDLE hSession, CK_OBJECT_HANDLE hKey1, CK_OBJECT_HANDLE hKey2);
 	void symDerive(CK_SESSION_HANDLE hSession, CK_OBJECT_HANDLE hKey, CK_OBJECT_HANDLE &hDerive, CK_MECHANISM_TYPE mechType, CK_KEY_TYPE keyType);
+	CK_RV keyDerive(CK_SESSION_HANDLE hSession, CK_OBJECT_HANDLE hKey, CK_OBJECT_HANDLE &hDerive, CK_MECHANISM_TYPE mechType, CK_KEY_TYPE keyType = (CK_KEY_TYPE)(-1), CK_ULONG keyLength = (CK_ULONG)(-1));
+
 };
 
 #endif // !_SOFTHSM_V2_DERIVETESTS_H
