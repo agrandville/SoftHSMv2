@@ -34,6 +34,7 @@
 #ifndef _SOFTHSM_V2_SOFTHSM2_UTIL_H
 #define _SOFTHSM_V2_SOFTHSM2_UTIL_H
 
+#include <stdlib.h>
 #include "cryptoki.h"
 
 // Main functions

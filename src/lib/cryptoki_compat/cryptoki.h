@@ -23,8 +23,7 @@
 #ifndef ___CRYPTOKI_H_INC___
 #define ___CRYPTOKI_H_INC___
 
-#ifdef WIN32
-
+#ifdef _WIN32
 #pragma pack(push, cryptoki, 1)
 
 /* Specifies that the function is a DLL entry point. */
@@ -62,19 +61,41 @@
 #endif
 
 #include "pkcs11.h"
-
+// SOFTHSM SPECIFIC
 #define CKC_OPENPGP (CKC_VENDOR_DEFINED|0x00504750)
 #define CKA_NAME_HASH_ALGORITHM         0x0000008C
 
-#define CKA_COPYABLE           0x00000171
-#define CKA_DESTROYABLE        0x00000172
-#define CKR_COPY_PROHIBITED                   0x0000001A 
-#define CKR_ACTION_PROHIBITED                 0x0000001B 
+#define CKA_COPYABLE                   0x00000171
+#define CKA_DESTROYABLE                0x00000172
+#define CKR_COPY_PROHIBITED            0x0000001A 
+#define CKR_ACTION_PROHIBITED          0x0000001B 
 
 #pragma pack(pop, cryptoki)
 
 #else
+/* UNIX version */
+#define CK_PTR *
+#define CK_DEFINE_FUNCTION(returnType, name) \
+	returnType name
+#define CK_DECLARE_FUNCTION(returnType, name) \
+	returnType name
+#define CK_DECLARE_FUNCTION_POINTER(returnType, name) \
+	returnType (CK_PTR name)
+#define CK_CALLBACK_FUNCTION(returnType, name) \
+	returnType (CK_PTR name)
+#ifndef NULL_PTR
+#define NULL_PTR 0
+#endif
 #include "pkcs11.h"
+// SOFTHSM SPECIFIC
+#define CKC_OPENPGP (CKC_VENDOR_DEFINED|0x00504750)
+#define CKA_NAME_HASH_ALGORITHM         0x0000008C
+
+#define CKA_COPYABLE                   0x00000171
+#define CKA_DESTROYABLE                0x00000172
+#define CKR_COPY_PROHIBITED            0x0000001A 
+#define CKR_ACTION_PROHIBITED          0x0000001B 
+
 #endif
 
 #endif /* ___CRYPTOKI_H_INC___ */
