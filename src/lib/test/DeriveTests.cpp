@@ -665,8 +665,10 @@ void DeriveTests::testkeyDerive()
 	CK_KEY_TYPE keyType;
 	CK_BBOOL	ckSensitive,
 				ckPrivate,
-				ckExtractable;
-	CK_ATTRIBUTE valAttrib[6];
+				ckExtractable,
+				ckEncrypt,
+				ckDecrypt;
+	CK_ATTRIBUTE valAttrib[8];
 	
 	valAttrib[0].type = CKA_VALUE;		valAttrib[0].pValue = &value;		valAttrib[0].ulValueLen = sizeof(value);
 	valAttrib[1].type = CKA_KEY_TYPE;	valAttrib[1].pValue = &keyType;		valAttrib[1].ulValueLen = sizeof(keyType);
@@ -674,10 +676,14 @@ void DeriveTests::testkeyDerive()
 	valAttrib[3].type = CKA_SENSITIVE;	valAttrib[3].pValue = &ckSensitive;	valAttrib[3].ulValueLen = sizeof(ckSensitive);
 	valAttrib[4].type = CKA_PRIVATE;	valAttrib[4].pValue = &ckPrivate;	valAttrib[4].ulValueLen = sizeof(ckPrivate);
 	valAttrib[5].type = CKA_EXTRACTABLE;valAttrib[5].pValue = &ckExtractable;valAttrib[5].ulValueLen = sizeof(ckExtractable);
+	valAttrib[6].type = CKA_ENCRYPT;	valAttrib[6].pValue = &ckEncrypt;	valAttrib[6].ulValueLen = sizeof(ckEncrypt);
+	valAttrib[7].type = CKA_DECRYPT;	valAttrib[7].pValue = &ckDecrypt;	valAttrib[7].ulValueLen = sizeof(ckDecrypt);
 	rv = C_GetAttributeValue(hSessionRW, hDerive, valAttrib, sizeof(valAttrib) / sizeof(CK_ATTRIBUTE));
 	CPPUNIT_ASSERT(rv == CKR_OK);
 	CPPUNIT_ASSERT(*((CK_KEY_TYPE*)(valAttrib[1].pValue)) == CKK_GENERIC_SECRET);
-	CPPUNIT_ASSERT(*((CK_ULONG*)(valAttrib[2].pValue)) == 16);
+	CPPUNIT_ASSERT(*((CK_BBOOL*)(valAttrib[6].pValue)) == CK_FALSE);
+	CPPUNIT_ASSERT(*((CK_BBOOL*)(valAttrib[7].pValue)) == CK_FALSE);
+	CPPUNIT_ASSERT(*((CK_ULONG*)(valAttrib[2].pValue)) == 16 /*MD5 LENGTH*/);
 
 
   	rv = keyDerive(hSessionRW, hKeyDes3, hDerive, CKM_SHA1_KEY_DERIVATION, CKK_GENERIC_SECRET, 20);

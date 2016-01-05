@@ -9807,6 +9807,14 @@ CK_RV SoftHSM::deriveKey(CK_SESSION_HANDLE hSession,
 			bOK = bOK && osobject->setAttribute(CKA_VALUE, value);
 			bOK = bOK && osobject->setAttribute(CKA_VALUE_LEN, byteLen);
 			
+			if(bOK && keyType == CKK_GENERIC_SECRET)
+			{
+				// PKCS #11 Mechanisms v2.30: Cryptoki – Draft 7
+				// 6.6.2  
+				// Generic secret key objects keys do not support encryption or decryption
+				bOK = bOK && osobject->setAttribute(CKA_ENCRYPT, false);
+				bOK = bOK && osobject->setAttribute(CKA_DECRYPT, false);
+			}
 
 			if (bOK)
 				bOK = osobject->commitTransaction();
