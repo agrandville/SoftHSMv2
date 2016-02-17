@@ -1,52 +1,49 @@
 {
 	'targets' : [{
 			'target_name' :
-				'softhsm2',
+				'cryptotest',
 			'type' :
-				'shared_library',
-			'dependencies': [
-				'convarch.gyp:convarch',
-				'softhsm2-util.gyp:softhsm2-util',
-				'softhsm2-test.gyp:cryptotest',
-			],
+				'executable',
 			'sources' : [
-				'src/lib/access.h',
-				'src/lib/access.cpp',
-				'src/lib/P11Attributes.cpp',
-				'src/lib/P11Attributes.h',
-				'src/lib/P11Objects.cpp',
-				'src/lib/P11Objects.h',
-				'src/lib/main.cpp',
-				'src/lib/SoftHSM.cpp',
+				'src/lib/crypto/test/AESTests.cpp',
+				'src/lib/crypto/test/chisq.c',
+				'src/lib/crypto/test/cryptotest.cpp',
+				'src/lib/crypto/test/DESTests.cpp',
+				'src/lib/crypto/test/DHTests.cpp',
+				'src/lib/crypto/test/DSATests.cpp',
+				'src/lib/crypto/test/ECDHTests.cpp',
+				'src/lib/crypto/test/ECDSATests.cpp',
+				'src/lib/crypto/test/GOSTTests.cpp',
+				'src/lib/crypto/test/HashTests.cpp',
+				'src/lib/crypto/test/MacTests.cpp',
+				'src/lib/crypto/test/RNGTests.cpp',
+				'src/lib/crypto/test/RSATests.cpp',
+				'src/lib/crypto/test/ent.c',
+				'src/lib/crypto/test/randtest.c'
 			],
 			'include_dirs' : [
 				'src/lib/cryptoki_compat',
-				'src/lib/object_store',			
-				'src/lib/data_mgr',
-				'src/lib/common',
-				'src/lib/slot_mgr',
+				'src/bin/common',
+				'../../openssl/include',
+				'src/lib',
 				'src/lib/crypto',
+				'../../cppunit/cppunit/include',
+				'src/lib/data_mgr',
+				'src/lib/object_store',
 				'src/lib/session_mgr',
-				'src/lib/handle_mgr'
+				'src/lib/slot_mgr',
+				'src/lib/common'
 			],
 			'conditions' : [
-				['OS=="win"', {
+				['OS=="win"',{
 					'sources' : [
-						'src/bin/win32/getpassphase.cpp',
-						'src/bin/win32/config.h',
 						'src/bin/win32/getopt.cpp',
-						'src/bin/win32/getopt.h'
-					],
-					'defines' : [
-						'WIN32'
-					],
-					'cflags': [
-						'/WX','/Od'
+						'src/bin/win32/config.h',
+						'src/lib/win32/syslog.cpp',
 					],
 					'include_dirs' : [
-						'src/bin/win32',
 						'src/lib/win32',
-						'../../openssl/include'
+						'src/bin/win32'
 					],
 					'libraries' : [
 						'ssleay32.lib',
@@ -55,27 +52,10 @@
 						'Advapi32.lib',
 						'User32.lib',
 						'Crypt32.lib',
-						'Gdi32.lib'
+						'Gdi32.lib',
+						'cppunit.lib'
 					]
-				}],
-				['OS=="linux"', {
-						'sources' : [
-							'config.h'
-						],	
-						'include_dirs' : [
-							'./'
-						],						
-						'ldflags' : [
-							'-Wl,--no-whole-archive'
-						],
-						'cflags': [ 
-							'-fPIC'
-						],
-						'libraries' : [
-							'-lssl','-lcrypto'
-						]
-					}
-				]
+				}]
 			]
 		}
 	],
@@ -97,7 +77,8 @@
 					'AdditionalLibraryDirectories': [
 						'../../openssl/out32.dbg',
 						'Debug/lib',
-					]
+						'../../cppunit/cppunit/lib'
+					],
 				}          
 			}
 		},
@@ -112,7 +93,7 @@
 				'WholeProgramOptimization': 'true',
 				'OmitFramePointers': 'true',
 				'EnableFunctionLevelLinking': 'true',
-				'EnableIntrinsicFunctions': 'true'            
+				'EnableIntrinsicFunctions': 'true' 
 			},
 			'VCLinkerTool': {
 				'LinkTimeCodeGeneration': 1,
@@ -121,7 +102,8 @@
 				'LinkIncremental': 1,
 				'AdditionalLibraryDirectories': [
 					'../../openssl/out32',
-					'Release/lib'
+					'Release/lib',
+					'../../cppunit/cppunit/lib'
 				]            
 			}          
 			}
