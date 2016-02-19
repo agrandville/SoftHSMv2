@@ -1,4 +1,7 @@
 {
+	'includes': [
+		'configure.gypi'
+	],
 	'targets' : [{
 			'target_name' :
 				'cryptotest',
@@ -24,7 +27,6 @@
 			'include_dirs' : [
 				'src/lib/cryptoki_compat',
 				'src/bin/common',
-				'../../openssl/include',
 				'src/lib',
 				'src/lib/crypto',
 				'../../cppunit/cppunit/include',
@@ -38,7 +40,7 @@
 				['OS=="win"',{
 					'sources' : [
 						'src/bin/win32/getopt.cpp',
-						'src/bin/win32/config.h',
+						#'src/bin/win32/config.h',
 						'src/lib/win32/syslog.cpp',
 					],
 					'include_dirs' : [
@@ -46,8 +48,6 @@
 						'src/bin/win32'
 					],
 					'libraries' : [
-						'ssleay32.lib',
-						'libeay32.lib',
 						'convarch.lib',
 						'Advapi32.lib',
 						'User32.lib',
@@ -55,7 +55,36 @@
 						'Gdi32.lib',
 						'cppunit.lib'
 					]
-				}]
+				}],
+#				[ 'build_configuration=="debug"', {
+#					'libraries' : [
+#						'../../cppunit/cppunit/lib/cppunitd.lib'
+#					],}
+#				],
+				[ 'build_with_botan==1', {
+					'include_dirs' : [
+						'../../botan/build/include'
+					],
+					'libraries' : [
+						'../../botan/botan.lib'
+					],
+					'defines': [
+						'WITH_BOTAN',
+					]					
+				}],
+				[ 'build_with_openssl==1', {
+					'include_dirs' : [
+						'../../openssl/include'
+					],
+					'libraries' : [
+						'../../openssl/out32/ssleay32.lib',
+						'../../openssl/out32/libeay32.lib',
+					],
+					'defines': [
+						'WITH_OPENSSL',
+					]					
+				}],
+				[ 'enable_debug_to_stderr==1', {'defines': ['DEBUG_LOG_STDERR',],}],
 			]
 		}
 	],
@@ -67,20 +96,21 @@
 			'msvs_settings': {
 				'VCCLCompilerTool': {
 					'RuntimeLibrary': 1, 
+					'Optimization': 0,
 				},
 				'VCLinkerTool': {
 					'LinkTimeCodeGeneration': 0,
-					'OptimizeReferences': 2,
+					'OptimizeReferences': 0,
 					'EnableCOMDATFolding': 2,
 					'LinkIncremental': 1,
 					'GenerateDebugInformation': 'true',
 					'AdditionalLibraryDirectories': [
 						'../../openssl/out32.dbg',
 						'Debug/lib',
-						'../../cppunit/cppunit/lib'
+						'../../cppunit/cppunit/lib.dbg'
 					],
 				}          
-			}
+			},
 		},
 		'Release': {
 			'defines': [ 'NDEBUG' ],
@@ -105,8 +135,11 @@
 					'Release/lib',
 					'../../cppunit/cppunit/lib'
 				]            
-			}          
 			}
+			},
+			'variables': {
+				'build_configuration' : 'release',
+			}			
 		}
 		}  
 	}

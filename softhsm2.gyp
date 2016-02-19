@@ -1,4 +1,7 @@
 {
+	'includes': [
+		'configure.gypi'
+	],
 	'targets' : [{
 			'target_name' :
 				'softhsm2',
@@ -33,7 +36,6 @@
 				['OS=="win"', {
 					'sources' : [
 						'src/bin/win32/getpassphase.cpp',
-						'src/bin/win32/config.h',
 						'src/bin/win32/getopt.cpp',
 						'src/bin/win32/getopt.h'
 					],
@@ -45,12 +47,9 @@
 					],
 					'include_dirs' : [
 						'src/bin/win32',
-						'src/lib/win32',
-						'../../openssl/include'
+						'src/lib/win32'
 					],
 					'libraries' : [
-						'ssleay32.lib',
-						'libeay32.lib',
 						'convarch.lib',
 						'Advapi32.lib',
 						'User32.lib',
@@ -60,7 +59,7 @@
 				}],
 				['OS=="linux"', {
 						'sources' : [
-							'config.h'
+							#'config.h'
 						],	
 						'include_dirs' : [
 							'./'
@@ -75,7 +74,31 @@
 							'-lssl','-lcrypto'
 						]
 					}
-				]
+				],
+				[ 'enable_debug_to_stderr==1', {'defines': ['DEBUG_LOG_STDERR',],}],
+				[ 'build_with_openssl==1', {
+					'include_dirs' : [
+						'../../openssl/include'
+					],
+					'libraries' : [
+						'../../openssl/out32/ssleay32.lib',
+						'../../openssl/out32/libeay32.lib',
+					],
+					'defines': [
+						'WITH_OPENSSL',
+					],
+				}],
+				[ 'build_with_botan==1', {
+					'include_dirs' : [
+						'../../botan/build/include'
+					],
+					'libraries' : [
+						'../../botan/botan.lib'
+					],
+					'defines': [
+						'WITH_BOTAN',
+					],
+				}]	
 			]
 		}
 	],
@@ -87,6 +110,7 @@
 			'msvs_settings': {
 				'VCCLCompilerTool': {
 					'RuntimeLibrary': 1, 
+					'Optimization': 0,
 				},
 				'VCLinkerTool': {
 					'LinkTimeCodeGeneration': 0,
