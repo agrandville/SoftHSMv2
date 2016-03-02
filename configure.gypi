@@ -21,9 +21,9 @@
 	# enable unix mutex
 	'enable_pthread' : '0',
 	# cppunit headers
-	'cppunit_headers' : '../../cppunit/cppunit/include',
+	'cppunit_headers' : '../../cppunit/include',
 	# cppunit libs
-	'cppunit_libs' : '../../cppunit/cppunit/lib/cppunitd.lib',
+	'cppunit_libs' : '../../cppunit/lib/cppunitd.lib',
 	# PACKAGE_VERSION
 	'package_version' : '2.0.0b2',
 	# VERSION_MAJOR

@@ -82,7 +82,7 @@
 		}
 	],
     'target_defaults': {
-		'default_configuration': 'Release',
+		'default_configuration': 'Debug',
 		'configurations': {
 			'Debug': {
 				'defines': [ 'DEBUG', '_DEBUG' ],
@@ -92,6 +92,7 @@
 						'Optimization': 0,
 					},
 					'VCLinkerTool': {
+						'ImageHasSafeExceptionHandlers': 'false',
 						'LinkTimeCodeGeneration': 0,
 						'OptimizeReferences': 0,
 						'EnableCOMDATFolding': 2,
@@ -102,30 +103,6 @@
 						],
 					}          
 				},
-			},
-			'Release': {
-				'defines': [ 'NDEBUG' ],
-				'msvs_settings': {
-					'VCCLCompilerTool': {
-						'RuntimeLibrary': 0,
-						'Optimization': 3,
-						'FavorSizeOrSpeed': 1,
-						'InlineFunctionExpansion': 2,
-						'WholeProgramOptimization': 'true',
-						'OmitFramePointers': 'true',
-						'EnableFunctionLevelLinking': 'true',
-						'EnableIntrinsicFunctions': 'true' 
-					},
-					'VCLinkerTool': {
-						'LinkTimeCodeGeneration': 1,
-						'OptimizeReferences': 2,
-						'EnableCOMDATFolding': 2,
-						'LinkIncremental': 1,
-						'AdditionalLibraryDirectories': [
-							'Release/lib',
-						]            
-					}
-				}
 			}
 		}  
 	}
