@@ -122,6 +122,7 @@
 					'Optimization': 0,
 				},
 				'VCLinkerTool': {
+					'ImageHasSafeExceptionHandlers': 'false',
 					'LinkTimeCodeGeneration': 0,
 					'OptimizeReferences': 2,
 					'EnableCOMDATFolding': 2,
@@ -148,6 +149,7 @@
 				'EnableIntrinsicFunctions': 'true'            
 			},
 			'VCLinkerTool': {
+				'ImageHasSafeExceptionHandlers': 'false',
 				'LinkTimeCodeGeneration': 1,
 				'OptimizeReferences': 2,
 				'EnableCOMDATFolding': 2,
