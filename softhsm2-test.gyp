@@ -29,18 +29,17 @@
 				'src/bin/common',
 				'src/lib',
 				'src/lib/crypto',
-				'../../cppunit/cppunit/include',
 				'src/lib/data_mgr',
 				'src/lib/object_store',
 				'src/lib/session_mgr',
 				'src/lib/slot_mgr',
-				'src/lib/common'
+				'src/lib/common',
+				'<@(cppunit_headers)'
 			],
 			'conditions' : [
 				['OS=="win"',{
 					'sources' : [
 						'src/bin/win32/getopt.cpp',
-						#'src/bin/win32/config.h',
 						'src/lib/win32/syslog.cpp',
 					],
 					'include_dirs' : [
@@ -53,20 +52,15 @@
 						'User32.lib',
 						'Crypt32.lib',
 						'Gdi32.lib',
-						'cppunit.lib'
+						'<@(cppunit_libs)'
 					]
 				}],
-#				[ 'build_configuration=="debug"', {
-#					'libraries' : [
-#						'../../cppunit/cppunit/lib/cppunitd.lib'
-#					],}
-#				],
 				[ 'build_with_botan==1', {
 					'include_dirs' : [
-						'../../botan/build/include'
+						'<@(botan_headers)',
 					],
 					'libraries' : [
-						'../../botan/botan.lib'
+						'<@(botan_libs)',
 					],
 					'defines': [
 						'WITH_BOTAN',
@@ -74,11 +68,10 @@
 				}],
 				[ 'build_with_openssl==1', {
 					'include_dirs' : [
-						'../../openssl/include'
+						'<@(openssl_headers)'
 					],
 					'libraries' : [
-						'../../openssl/out32/ssleay32.lib',
-						'../../openssl/out32/libeay32.lib',
+						'<@(openssl_libs)',
 					],
 					'defines': [
 						'WITH_OPENSSL',
@@ -91,56 +84,49 @@
     'target_defaults': {
 		'default_configuration': 'Release',
 		'configurations': {
-		'Debug': {
-			'defines': [ 'DEBUG', '_DEBUG' ],
-			'msvs_settings': {
-				'VCCLCompilerTool': {
-					'RuntimeLibrary': 1, 
-					'Optimization': 0,
+			'Debug': {
+				'defines': [ 'DEBUG', '_DEBUG' ],
+				'msvs_settings': {
+					'VCCLCompilerTool': {
+						'RuntimeLibrary': 1, 
+						'Optimization': 0,
+					},
+					'VCLinkerTool': {
+						'LinkTimeCodeGeneration': 0,
+						'OptimizeReferences': 0,
+						'EnableCOMDATFolding': 2,
+						'LinkIncremental': 1,
+						'GenerateDebugInformation': 'true',
+						'AdditionalLibraryDirectories': [
+							'Debug/lib',
+						],
+					}          
 				},
-				'VCLinkerTool': {
-					'LinkTimeCodeGeneration': 0,
-					'OptimizeReferences': 0,
-					'EnableCOMDATFolding': 2,
-					'LinkIncremental': 1,
-					'GenerateDebugInformation': 'true',
-					'AdditionalLibraryDirectories': [
-						'../../openssl/out32.dbg',
-						'Debug/lib',
-						'../../cppunit/cppunit/lib.dbg'
-					],
-				}          
 			},
-		},
-		'Release': {
-			'defines': [ 'NDEBUG' ],
-			'msvs_settings': {
-			'VCCLCompilerTool': {
-				'RuntimeLibrary': 0,
-				'Optimization': 3,
-				'FavorSizeOrSpeed': 1,
-				'InlineFunctionExpansion': 2,
-				'WholeProgramOptimization': 'true',
-				'OmitFramePointers': 'true',
-				'EnableFunctionLevelLinking': 'true',
-				'EnableIntrinsicFunctions': 'true' 
-			},
-			'VCLinkerTool': {
-				'LinkTimeCodeGeneration': 1,
-				'OptimizeReferences': 2,
-				'EnableCOMDATFolding': 2,
-				'LinkIncremental': 1,
-				'AdditionalLibraryDirectories': [
-					'../../openssl/out32',
-					'Release/lib',
-					'../../cppunit/cppunit/lib'
-				]            
+			'Release': {
+				'defines': [ 'NDEBUG' ],
+				'msvs_settings': {
+					'VCCLCompilerTool': {
+						'RuntimeLibrary': 0,
+						'Optimization': 3,
+						'FavorSizeOrSpeed': 1,
+						'InlineFunctionExpansion': 2,
+						'WholeProgramOptimization': 'true',
+						'OmitFramePointers': 'true',
+						'EnableFunctionLevelLinking': 'true',
+						'EnableIntrinsicFunctions': 'true' 
+					},
+					'VCLinkerTool': {
+						'LinkTimeCodeGeneration': 1,
+						'OptimizeReferences': 2,
+						'EnableCOMDATFolding': 2,
+						'LinkIncremental': 1,
+						'AdditionalLibraryDirectories': [
+							'Release/lib',
+						]            
+					}
+				}
 			}
-			},
-			'variables': {
-				'build_configuration' : 'release',
-			}			
-		}
 		}  
 	}
 }

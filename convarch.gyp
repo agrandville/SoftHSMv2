@@ -9,8 +9,7 @@
 			'static_library',
 		'sources' : [
 			'src/lib/common/Configuration.cpp',
-			'src/lib/common/Configuration.h',
-			'src/lib/common/config.h',
+			'src/lib/common/Configuration.h',			
 			'src/lib/common/fatal.cpp',
 			'src/lib/common/log.cpp',
 			'src/lib/common/MutexFactory.cpp',
@@ -74,6 +73,13 @@
 			'src/lib/crypto',
 			'src/lib/win32',
 			'src/lib/data_mgr'
+		],
+		'defines' : [
+			'DEFAULT_SOFTHSM2_CONF="<@(default_softhsm2_conf)"',
+			'VERSION_MAJOR=<@(version_major)',
+			'VERSION_MINOR=<@(version_minor)',
+			'MAX_PIN_LEN=<@(max_pin_len)',
+			'MIN_PIN_LEN=<@(min_pin_len)',
 		],
 		'conditions' : [
 			['OS=="win"',{
@@ -220,7 +226,7 @@
 					'src/lib/crypto/OSSLUtil.cpp',						
 				],
 				'include_dirs' : [
-					'../../openssl/include'
+					'<@(openssl_headers)',
 				],
 				'defines': [
 					'WITH_OPENSSL',
@@ -230,6 +236,7 @@
 			[ 'enable_ecc==1', {'defines': ['WITH_ECC',],}],
 			[ 'enable_ghost==1', {'defines': ['WITH_GOST',],}],
 			[ 'enable_debug_to_stderr==1', {'defines': ['DEBUG_LOG_STDERR',],}],
+			[ 'enable_pthread==1', {'defines': ['HAVE_PTHREAD_H',],}],
 			
 		]
 	}],

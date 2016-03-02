@@ -32,6 +32,15 @@
 				'src/lib/session_mgr',
 				'src/lib/handle_mgr'
 			],
+			'defines' : [
+				'VERSION_MAJOR=<@(version_major)',
+				'VERSION_MINOR=<@(version_minor)',
+				'MAX_PIN_LEN=<@(max_pin_len)',
+				'MIN_PIN_LEN=<@(min_pin_len)',
+				'DEFAULT_LOG_LEVEL="<@(default_log_level)"',
+				'DEFAULT_OBJECTSTORE_BACKEND="<@(default_objectstore_backend)"',
+				'DEFAULT_TOKENDIR="<@(default_tokendir)"',
+			],
 			'conditions' : [
 				['OS=="win"', {
 					'sources' : [
@@ -47,7 +56,8 @@
 					],
 					'include_dirs' : [
 						'src/bin/win32',
-						'src/lib/win32'
+						'src/lib/win32',
+						'src/bin/common'
 					],
 					'libraries' : [
 						'convarch.lib',
@@ -78,11 +88,10 @@
 				[ 'enable_debug_to_stderr==1', {'defines': ['DEBUG_LOG_STDERR',],}],
 				[ 'build_with_openssl==1', {
 					'include_dirs' : [
-						'../../openssl/include'
+						'<@(openssl_headers)'
 					],
 					'libraries' : [
-						'../../openssl/out32/ssleay32.lib',
-						'../../openssl/out32/libeay32.lib',
+						'<@(openssl_libs)'
 					],
 					'defines': [
 						'WITH_OPENSSL',
@@ -90,10 +99,10 @@
 				}],
 				[ 'build_with_botan==1', {
 					'include_dirs' : [
-						'../../botan/build/include'
+						'<@(botan_headers)',
 					],
 					'libraries' : [
-						'../../botan/botan.lib'
+						'<@(botan_libs)',
 					],
 					'defines': [
 						'WITH_BOTAN',

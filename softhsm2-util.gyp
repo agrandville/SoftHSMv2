@@ -17,11 +17,15 @@
 				'src/bin/common',
 				'src/lib/common'				
 			],
+			'defines' : [
+				'PACKAGE_VERSION="<@(package_version)"',
+				'MAX_PIN_LEN=<@(max_pin_len)',
+				'MIN_PIN_LEN=<@(min_pin_len)',
+			],
 			'conditions' : [
 				['OS=="win"',{
 					'sources' : [
 						'src/bin/win32/getopt.cpp',
-						#'src/bin/win32/config.h',
 						'src/lib/win32/syslog.cpp',
 					],
 					'include_dirs' : [
@@ -41,10 +45,10 @@
 						'src/bin/util/softhsm2-util-botan.cpp'
 					],
 					'include_dirs' : [
-						'../../botan/build/include'
+						'<@(botan_headers)',
 					],
 					'libraries' : [
-						'../../botan/botan.lib'
+						'<@(botan_libs)',
 					]}
 				],
 				[ 'build_with_openssl==1', {
@@ -52,11 +56,10 @@
 						'src/bin/util/softhsm2-util-ossl.cpp'
 					],
 					'include_dirs' : [
-						'../../openssl/include'
+						'<@(openssl_headers)'
 					],
 					'libraries' : [
-						'../../openssl/out32/ssleay32.lib',
-						'../../openssl/out32/libeay32.lib',
+						'<@(openssl_libs)',
 					]}
 				],
 				[ 'enable_debug_to_stderr==1', {'defines': ['DEBUG_LOG_STDERR',],}],
@@ -80,7 +83,7 @@
 				'LinkIncremental': 1,
 				'GenerateDebugInformation': 'true',
 				'AdditionalLibraryDirectories': [
-					'../../openssl/out32.dbg',
+					#'../../openssl/out32.dbg',
 					'Debug/lib',
 				]
 			}          
@@ -105,7 +108,7 @@
 				'EnableCOMDATFolding': 2,
 				'LinkIncremental': 1,
 				'AdditionalLibraryDirectories': [
-					'../../openssl/out32',
+					#'../../openssl/out32',
 					'Release/lib',
 				]            
 			}          

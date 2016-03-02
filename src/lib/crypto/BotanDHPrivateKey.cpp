@@ -62,7 +62,7 @@ BotanDH_PrivateKey::BotanDH_PrivateKey(
 			Botan::RandomNumberGenerator& rng) :
 	Botan::DL_Scheme_PrivateKey(alg_id, key_bits, Botan::DL_Group::PKCS3_DH_PARAMETERS)
 {
-	impl = new Botan::DH_PrivateKey(rng, group, x);
+//	impl = new Botan::DH_PrivateKey(rng, group, x);
 }
 #else
 BotanDH_PrivateKey::BotanDH_PrivateKey(
@@ -80,9 +80,9 @@ BotanDH_PrivateKey::BotanDH_PrivateKey(Botan::RandomNumberGenerator& rng,
 				       const Botan::BigInt& x_arg)
 {
 	impl = new Botan::DH_PrivateKey(rng, grp, x_arg);
-	group = grp;
-	x = x_arg;
-	y = impl->get_y();
+// 	group = grp;
+// 	x = x_arg;
+// 	y = impl->get_y();
 }
 
 BotanDH_PrivateKey::~BotanDH_PrivateKey()
