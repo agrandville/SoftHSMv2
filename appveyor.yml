@@ -24,15 +24,15 @@ install:
   - git submodule init && git submodule update
 #  - cmd: node --version
 #  - ps: start install
+#  - cmd: mkdir ..\openssl
+  - cmd: cd ..
   - ps: Start-FileDownload 'http://grandville.net/download/OpenSSL1.0.2g.vs120.zip'
-  - cmd: mkdir third_party\openssl
-  - cmd: cd third_party\openssl
-  - cmd: pkunzip ..\..\OpenSSL1.0.2g.vs120.zip
-  - cmd: ..\..\
+  - cmd: unzip OpenSSL1.0.2g.vs120.zip
+  - cmd: cd softhsmv2
   - cmd: vcbuild.bat
 
 on_finish:
-  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+#  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 
 build: off
 test: off
