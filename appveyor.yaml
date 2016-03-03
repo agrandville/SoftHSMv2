@@ -1,16 +1,22 @@
-version: 1.0.{build}
 build:
  # MSBuild verbosity level : quiet|minimal|normal|detailed
  verbosity: detailed
+
 platform:
   - x86
+
 init:
   - ps: start init
   - cmd: ECHO this is batch 
   - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+
 install:
+  - ps: Install-Product node $env:nodejs_version $env:Platform
+  - node --version
   - ps: start install
   - vcbuild.bat
+
 on_finish:
   - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
-  
+
+build: off
