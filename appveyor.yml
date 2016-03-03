@@ -11,8 +11,8 @@ before_build:
 platform:
   - x86
 
-#build_script:
-#  - cmd: ECHO starting build script
+build_script:
+  - cmd: ECHO build script disabled
 #  - cmd: vcbuild.bat
 
 #init:
@@ -25,9 +25,10 @@ install:
 #  - cmd: node --version
 #  - ps: start install
   - ps: Start-FileDownload 'http://grandville.net/download/OpenSSL1.0.2g.vs120.zip'
-  - cmd: mkdir third_party/openssl
-  - cmd: cd third_party/openssl
+  - cmd: mkdir third_party\openssl
+  - cmd: cd third_party\openssl
   - cmd: pkunzip ..\..\OpenSSL1.0.2g.vs120.zip
+  - cmd: ..\..\
   - cmd: vcbuild.bat
 
 on_finish:
