@@ -9,7 +9,8 @@ platform:
   - x86
 
 build_script:
-  - vcbuild.bat
+  - cmd: ECHO starting build script
+  - cmd: vcbuild.bat
 
 init:
   - ps: start init
@@ -18,11 +19,11 @@ init:
 
 install:
   - ps: Install-Product node $env:nodejs_version $env:Platform
-  - node --version
+  - cmd: node --version
   - ps: start install
-  - vcbuild.bat
+  - cmd: vcbuild.bat
 
 on_finish:
   - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 
-build: off
+#build: off
