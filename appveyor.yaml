@@ -1,9 +1,15 @@
 build:
- # MSBuild verbosity level : quiet|minimal|normal|detailed
- verbosity: detailed
+  # MSBuild verbosity level : quiet|minimal|normal|detailed
+  verbosity: detailed
 
+before_build:
+  - cmd: ECHO this is batch 
+  
 platform:
   - x86
+
+build_script:
+  - vcbuild.bat
 
 init:
   - ps: start init
