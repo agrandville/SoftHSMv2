@@ -2,8 +2,11 @@ version: 1.0.{build}
 build:
   verbosity: minimal
 init:
-  - cmd: echo starting
+  
   - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+install:
+  - ps: start install
+  - vcbuild.bat
 on_finish:
   - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
   
