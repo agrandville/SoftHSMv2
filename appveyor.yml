@@ -9,7 +9,7 @@ before_build:
   - cmd: ECHO this is batch 
   
 platform:
-  - x86
+  - Win32
 
 build_script:
   - cmd: ECHO build script disabled
@@ -28,6 +28,8 @@ install:
   - cmd: cd ..
   - ps: Start-FileDownload 'http://grandville.net/download/OpenSSL1.0.2g.vs120.zip'
   - cmd: unzip OpenSSL1.0.2g.vs120.zip
+  - ps: Start-FileDownload 'http://grandville.net/download/CppUnit1.14.0.vs120.zip'
+  - cmd: unzip CppUnit1.14.0.vs120.zip
   - cmd: cd softhsmv2
   - cmd: vcbuild.bat
 
