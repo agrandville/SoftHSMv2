@@ -2,14 +2,14 @@
   'variables': {
 	'build_with_botan' : '0',
 	# botan headers
-	'botan_headers' : '../../botan/build/include',
+	'botan_headers' : '../botan/build/include',
 	# botan libs
-	'botan_libs' : '../../botan/botan.lib',
+	'botan_libs' : '../botan/botan.lib',
 	'build_with_openssl' : '1',
 	# openssl headers
-	'openssl_headers' : '../../openssl/include',
+	'openssl_headers' : '../openssl/include',
 	# openssl lib
-	'openssl_libs' : ['../../openssl/out32/ssleay32.lib','../../openssl/out32/libeay32.lib'],
+	'openssl_libs' : ['../openssl/out32/ssleay32.lib','../openssl/out32/libeay32.lib'],
 	# Compile with GOST support
 	'enable_ghost' : '1',
 	# Compile with ECC support
@@ -21,9 +21,9 @@
 	# enable unix mutex
 	'enable_pthread' : '0',
 	# cppunit headers
-	'cppunit_headers' : '../../cppunit/include',
+	'cppunit_headers' : '../cppunit/include',
 	# cppunit libs
-	'cppunit_libs' : '../../cppunit/lib/cppunitd.lib',
+	'cppunit_libs' : '../cppunit/lib/cppunitd.lib',
 	# PACKAGE_VERSION
 	'package_version' : '2.0.0b2',
 	# VERSION_MAJOR
