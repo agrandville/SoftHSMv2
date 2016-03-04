@@ -2,14 +2,14 @@
   'variables': {
 	'build_with_botan' : '0',
 	# botan headers
-	'botan_headers' : './third_party/win32/botan/build/include',
+	'botan_headers' : './third_party/botan/build/include',
 	# botan libs
-	'botan_libs' : './third_party/win32/botan/botan.lib',
+	'botan_libs' : './third_party/botan/botan.lib',
 	'build_with_openssl' : '1',
 	# openssl headers
-	'openssl_headers' : './third_party/win32/openssl/include',
+	'openssl_headers' : './third_party/openssl/include',
 	# openssl lib
-	'openssl_libs' : ['./third_party/win32/openssl/out32/ssleay32.lib','./third_party/win32/openssl/out32/libeay32.lib'],
+	'openssl_libs' : ['./third_party/openssl/out32/ssleay32.lib','./third_party/openssl/out32/libeay32.lib'],
 	# Compile with GOST support
 	'enable_ghost' : '1',
 	# Compile with ECC support
@@ -21,9 +21,9 @@
 	# enable unix mutex
 	'enable_pthread' : '0',
 	# cppunit headers
-	'cppunit_headers' : './third_party/win32/cppunit/include',
+	'cppunit_headers' : './third_party/cppunit/include',
 	# cppunit libs
-	'cppunit_libs' : './third_party/win32/cppunit/lib/cppunitd.lib',
+	'cppunit_libs' : './third_party/cppunit/lib/cppunitd.lib',
 	# PACKAGE_VERSION
 	'package_version' : '2.0.0b2',
 	# VERSION_MAJOR
