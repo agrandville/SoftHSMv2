@@ -20,13 +20,13 @@ goto end
 
 :OpenSSLdepends
 if exist third_party\openssl goto CPPunitdepends
-powershell Invoke-WebRequest http://grandville.net/download/OpenSSL1.0.2g.vs120.MTd.noSymbols.zip -out third_party\OpenSSL1.0.2g.vs120.MTd.noSymbols.zip
+powershell Invoke-WebRequest http://grandville.net/download/OpenSSL1.0.2g.vs120.MTd.noSymbols.zip -OutFile third_party\OpenSSL1.0.2g.vs120.MTd.noSymbols.zip
 powershell Expand-Archive third_party\OpenSSL1.0.2g.vs120.MTd.noSymbols.zip third_party\
 
 
 :CPPunitdepends
 if exist third_party\cppunit goto Build
-powershell Invoke-WebRequest http://grandville.net/download/CppUnit1.14.0.vs120.zip -out third_party\CppUnit1.14.0.vs120.zip
+powershell Invoke-WebRequest http://grandville.net/download/CppUnit1.14.0.vs120.zip -OutFile third_party\CppUnit1.14.0.vs120.zip
 powershell Expand-Archive third_party\CppUnit1.14.0.vs120.zip third_party\
 
 :Build
